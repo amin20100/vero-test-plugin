@@ -68,7 +68,7 @@ class DW_Post_Types
 					'show_ui'             => true,
 					'publicly_queryable'  => true,
                     'exclude_from_search' => false,
-                    'taxonomies'          => ['publisher', 'author'],
+                    'taxonomies'          => ['publisher', 'book_author'],
 					'hierarchical'        => false, // Hierarchical causes memory issues - WP loads all records!
 					'rewrite'             => array(
                         'slug'       => 'books',
@@ -76,7 +76,7 @@ class DW_Post_Types
 						'feeds'      => true,
 					),
 					'query_var'           => true,
-					'supports'            => ['title', 'editor', 'thumbnail'],
+					'supports'            => ['title', 'editor', 'thumbnail', 'comments'],
 					'has_archive'         => true,
 					'show_in_nav_menus'   => true,
 					'show_in_rest'        => true,
@@ -95,7 +95,10 @@ class DW_Post_Types
 			apply_filters(
 				'dw_books_taxonomy_publisher',
 				array(
-					'hierarchical'          => true,
+                    'hierarchical'          => true,
+                    'public'                => true,
+                    'has-archive'           => true,
+                    'publicly_queryable'    => true,
 					'label'                 => __( 'Publishers', 'woocommerce' ),
 					'labels'                => array(
 						'name'              => __( 'Publishers', 'woocommerce' ),
@@ -115,7 +118,6 @@ class DW_Post_Types
 					'query_var'             => true,
 					'rewrite'               => array(
 						'slug'         => 'publishers',
-						'with_front'   => false,
 						'hierarchical' => true,
 					),
 				)
@@ -123,12 +125,15 @@ class DW_Post_Types
         );
 
         register_taxonomy(
-			'author',
+			'book_author',
 			apply_filters( 'dw_books_taxonomy_Author_post_types', array( 'book' ) ),
 			apply_filters(
 				'dw_books_taxonomy_Author',
 				array(
-					'hierarchical'          => true,
+                    'hierarchical'          => true,
+                    'public'                => true,
+                    'has-archive'           => true,
+                    'publicly_queryable'    => true,
 					'label'                 => __( 'Authors', 'woocommerce' ),
 					'labels'                => array(
 						'name'              => __( 'Authors', 'woocommerce' ),
@@ -147,13 +152,15 @@ class DW_Post_Types
 					'show_ui'               => true,
 					'query_var'             => true,
 					'rewrite'               => array(
-						'slug'         => 'authors',
-						'with_front'   => false,
+						'slug'         => 'book-author',
 						'hierarchical' => true,
 					),
 				)
 			)
-		);
+        );
+
+        register_taxonomy_for_object_type('book_author', 'book');
+        register_taxonomy_for_object_type('publisher', 'book');
     }
 
     public static function metaboxes() {

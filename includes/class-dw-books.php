@@ -49,6 +49,10 @@ final class DW_Books
         $this->init_hooks();
     }
 
+    public function i18n() {
+        load_plugin_textdomain( 'dw-books', false, dirname( plugin_basename( DW_PLUGIN_FILE ) ) . '/languages' );
+    }
+
     /**
      * Define constants
      */
@@ -76,6 +80,7 @@ final class DW_Books
      */
     public function init_hooks() {
         register_activation_hook( DW_PLUGIN_FILE, array( 'DW_Install', 'install' ) );
+        add_action('plugins_loaded', array($this, 'i18n'));
         add_action('plugins_loaded', array('DW_Post_Types', 'init'));
         add_action( 'admin_menu', [$this, 'admin_menu'], 9 );
     }
