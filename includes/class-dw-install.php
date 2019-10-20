@@ -39,9 +39,9 @@ class DW_Install
 		self::create_files();
 		self::update_plugin_version();
 		self::maybe_update_db_version();
-		delete_transient( 'dw_installing' );
 		flush_rewrite_rules();
-		do_action('dw_books_instlalled');
+		delete_transient( 'dw_installing' );
+        do_action('dw_books_instlalled');
     }
 
 	/**
@@ -50,8 +50,8 @@ class DW_Install
 	 * @since 3.2.0
 	 */
 	private static function setup_stuffs() {
-		WC_Post_types::register_post_types();
-		WC_Post_types::register_taxonomies();
+		DW_Post_types::register_post_types();
+		DW_Post_types::register_taxonomies();
 	}
 
     /**

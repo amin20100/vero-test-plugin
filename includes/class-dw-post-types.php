@@ -16,6 +16,9 @@ class DW_Post_Types
         add_action( 'init', array( __CLASS__, 'register_post_types' ), 5 );
         add_action( 'add_meta_boxes', array( __CLASS__, 'metaboxes' ));
         add_action( 'save_post', [__CLASS__, 'save_book'] );
+
+        self::manage_columns('book', [__CLASS__, 'manage_books_columns_titles']);
+        add_action('manage_book_posts_custom_column' , [__CLASS__, 'manage_books_columns'], 10, 2);
     }
 
 	/**
@@ -161,6 +164,28 @@ class DW_Post_Types
         $book = new DW_Book($post_item->ID);
         echo '<label for="book_isbn">'. __('ISBN', 'dw-books') .'</label>';
         echo '<input id="book_isbn" type="text" name="isbn" value="'. $book->get_info('isbn') .'">';
+    }
+
+    public static function manage_columns($post_type, $callback = '', $priority = 10, $params = 1) {
+        add_filter("manage_{$post_type}_posts_columns", $callback, $priority, $params);
+    }
+
+    public static function manage_books_columns_titles($columns) {
+        array_insert_after($columns, 'title', ['isbn' => __('ISBN', 'dw-books')] );
+
+        return $columns;
+    }
+
+    public static function manage_books_columns($column, $post_id) {
+        $book = new DW_Book($post_id);
+
+        switch ($column) {
+            case 'isbn':
+                echo $book->get_info('isbn');
+                break;
+
+
+        }
     }
 
     /**

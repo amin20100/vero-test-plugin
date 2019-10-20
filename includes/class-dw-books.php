@@ -77,6 +77,7 @@ final class DW_Books
     public function init_hooks() {
         register_activation_hook( DW_PLUGIN_FILE, array( 'DW_Install', 'install' ) );
         add_action('plugins_loaded', array('DW_Post_Types', 'init'));
+        add_action( 'admin_menu', [$this, 'admin_menu'], 9 );
     }
 
 	/**
@@ -98,5 +99,27 @@ final class DW_Books
 	 */
 	public function plugin_url() {
 		return untrailingslashit( plugins_url( '/', DW_PLUGIN_FILE ) );
-	}
+    }
+
+    public function admin_menu() {
+        $hook = add_submenu_page('edit.php?post_type=book', __('Book informations', 'dw-books'), __('Book info', 'dw-books'), 'manage_options', 'book-info', [$this,'book_info_page']);
+        add_action( "load-$hook", [ $this, 'screen_option' ] );
+    }
+
+    public function book_info_page() {
+        include DW_ABSPATH . '/includes/views/book-info.php';
+    }
+
+    public function screen_option() {
+        $option = 'per_page';
+		$args   = [
+			'label'   => 'Customers',
+			'default' => 5,
+			'option'  => 'customers_per_page'
+		];
+
+		add_screen_option( $option, $args );
+
+		$this->books_info_object = new Books_Info_List();
+    }
 }
