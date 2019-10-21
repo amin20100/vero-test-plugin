@@ -118,9 +118,9 @@ final class DW_Books
     public function screen_option() {
         $option = 'per_page';
 		$args   = [
-			'label'   => 'Customers',
+			'label'   => 'Informations',
 			'default' => 5,
-			'option'  => 'customers_per_page'
+			'option'  => 'info_per_page'
 		];
 
 		add_screen_option( $option, $args );
